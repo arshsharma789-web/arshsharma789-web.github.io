@@ -2,180 +2,160 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Shivani, Be My Valentine 💖</title>
+<title>Shivani ❤️ Arsh</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: radial-gradient(circle at top, #ff9a9e, #fad0c4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Segoe UI', sans-serif;
-    color: #fff;
-    text-align: center;
-    overflow: hidden;
-  }
+body{
+  margin:0;
+  height:100vh;
+  background:radial-gradient(circle at top,#ff9a9e,#fad0c4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Segoe UI',sans-serif;
+  overflow:hidden;
+  color:#fff;
+}
 
-  /* Falling hearts */
-  .heart {
-    position: fixed;
-    top: -10px;
-    font-size: 20px;
-    animation: fall linear forwards;
-    opacity: 0.8;
-    z-index: 1;
-  }
+.heart{
+  position:fixed;
+  top:-10px;
+  font-size:20px;
+  animation:fall linear forwards;
+  opacity:.8;
+}
 
-  @keyframes fall {
-    to {
-      transform: translateY(110vh);
-      opacity: 0;
-    }
-  }
+@keyframes fall{
+  to{transform:translateY(110vh);opacity:0;}
+}
 
-  .card {
-    background: rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(10px);
-    padding: 45px 35px;
-    border-radius: 25px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    max-width: 420px;
-    z-index: 2;
-    animation: fadeIn 1.5s ease;
-  }
+.card{
+  background:rgba(255,255,255,.22);
+  backdrop-filter:blur(10px);
+  padding:45px 35px;
+  border-radius:25px;
+  text-align:center;
+  max-width:420px;
+  z-index:3;
+}
 
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 15px;
-    font-family: 'Great Vibes', cursive;
-  }
+h1{
+  font-family:'Great Vibes',cursive;
+  font-size:3rem;
+}
 
-  p {
-    font-size: 1.15rem;
-    line-height: 1.6;
-    margin-bottom: 30px;
-  }
+.buttons{
+  display:flex;
+  gap:20px;
+  justify-content:center;
+  margin-top:25px;
+}
 
-  /* Buttons layout */
-  .buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    position: relative;
-    height: 70px;
-  }
+button{
+  padding:14px 22px;
+  border-radius:40px;
+  border:none;
+  cursor:pointer;
+  font-size:.95rem;
+  background:#fff;
+  color:#ff4d6d;
+}
 
-  button {
-    background: #fff;
-    color: #ff4d6d;
-    border: none;
-    padding: 14px 18px;
-    font-size: 0.95rem;
-    border-radius: 40px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    white-space: nowrap;
-  }
+#noBtn{
+  position:fixed;
+}
 
-  button:hover {
-    transform: scale(1.08);
-    background: #ffe5ec;
-  }
+.yes-screen{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+}
 
-  #noBtn {
-    position: relative;
-  }
-
-  /* YES screen */
-  .yes-screen {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 1.5s ease;
-  }
-
-  .yes-screen h1 {
-    font-size: 3.5rem;
-  }
-
-  iframe {
-    display: none;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-  }
+audio{display:none;}
 </style>
 </head>
 
 <body>
 
-<!-- Yun Hi song (YouTube – plays only after YES) -->
-<iframe
-  id="song"
-  src="https://www.youtube.com/embed/1C5d6F2zF4k?enablejsapi=1"
-  allow="autoplay">
-</iframe>
+<audio id="loveSong">
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
 
 <div class="card" id="mainCard">
   <h1>Shivani ❤️</h1>
-
-  <p>
-    Every love story is beautiful,<br>
-    but ours is my favorite.<br><br>
-    Will you be my Valentine? 💖
-  </p>
+  <p>Will you be my Valentine? 💖</p>
 
   <div class="buttons">
-    <button onclick="yesClicked()">Yes (obviously) 💖</button>
-    <button id="noBtn" onmouseover="moveNo()"> No (krne hi nhi dunga) 🙈</button>
+    <button onclick="yesClicked()">YES 💖</button>
+    <button id="noBtn">NO 🙈</button>
   </div>
 </div>
 
 <div class="card yes-screen" id="yesScreen">
   <h1>She said YES ❤️</h1>
-  <p>
-    Love you baby 😘💖<br>
-    Forever & always.
-  </p>
+  <p>Love you baby 😘💖</p>
 </div>
 
 <script>
-  function moveNo() {
-    const btn = document.getElementById("noBtn");
-    btn.style.transform =
-      `translate(${Math.random() * 80 - 40}px, ${Math.random() * 30 - 15}px)`;
-  }
+const noBtn = document.getElementById("noBtn");
+const card = document.getElementById("mainCard");
 
-  function yesClicked() {
-    document.getElementById("mainCard").style.display = "none";
-    document.getElementById("yesScreen").style.display = "flex";
+let speed = 1;
+let teaseTexts = [
+  "Nice try 😜",
+  "Oops!",
+  "Not today 😏",
+  "You love me 😘",
+  "Say YES ❤️"
+];
+let teaseIndex = 0;
 
-    // Play song
-    const iframe = document.getElementById("song");
-    iframe.src += "&autoplay=1";
-  }
+noBtn.addEventListener("click", dodge);
+noBtn.addEventListener("touchstart", dodge);
 
-  function createHeart() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "💖";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = (3 + Math.random() * 3) + "s";
-    heart.style.fontSize = (16 + Math.random() * 20) + "px";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000);
-  }
+function dodge(e){
+  e.preventDefault();
+  speed += 0.3;
 
-  setInterval(createHeart, 300);
+  noBtn.innerText = teaseTexts[teaseIndex++ % teaseTexts.length];
+
+  const cardRect = card.getBoundingClientRect();
+  let x,y;
+
+  do{
+    x = Math.random()*(window.innerWidth-noBtn.offsetWidth);
+    y = Math.random()*(window.innerHeight-noBtn.offsetHeight);
+  }while(
+    x > cardRect.left-60 &&
+    x < cardRect.right &&
+    y > cardRect.top-60 &&
+    y < cardRect.bottom
+  );
+
+  noBtn.style.transition = `left ${0.15/speed}s, top ${0.15/speed}s`;
+  noBtn.style.left = x+"px";
+  noBtn.style.top = y+"px";
+}
+
+function yesClicked(){
+  mainCard.style.display="none";
+  yesScreen.style.display="flex";
+  document.getElementById("loveSong").play();
+}
+
+function heart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="💖";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(3+Math.random()*3)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+}
+setInterval(heart,300);
 </script>
 
 </body>
 </html>
-
