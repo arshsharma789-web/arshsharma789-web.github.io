@@ -147,7 +147,7 @@ function dodge(e){
   e.preventDefault();
   attempts++;
 
-  /* First try: tease with shake */
+  // First try: tease only
   if(attempts === 1){
     noBtn.classList.add("shake");
     setTimeout(()=>noBtn.classList.remove("shake"),250);
@@ -158,21 +158,27 @@ function dodge(e){
   noBtn.innerText = teaseTexts[attempts % teaseTexts.length];
 
   const cardRect = card.getBoundingClientRect();
-  let x,y;
+
+  /* SAFE VISIBLE AREA (important for iPhone) */
+  const margin = 20;
+  const maxX = window.innerWidth - noBtn.offsetWidth - margin;
+  const maxY = window.innerHeight - noBtn.offsetHeight - margin;
+
+  let x, y;
 
   do{
-    x = Math.random()*(window.innerWidth-noBtn.offsetWidth);
-    y = Math.random()*(window.innerHeight-noBtn.offsetHeight);
+    x = margin + Math.random() * maxX;
+    y = margin + Math.random() * maxY;
   }while(
-    x > cardRect.left-80 &&
+    x > cardRect.left - noBtn.offsetWidth &&
     x < cardRect.right &&
-    y > cardRect.top-80 &&
+    y > cardRect.top - noBtn.offsetHeight &&
     y < cardRect.bottom
   );
 
   noBtn.style.transition = `left ${0.12/speed}s, top ${0.12/speed}s`;
-  noBtn.style.left = x+"px";
-  noBtn.style.top = y+"px";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 }
 
 function yesClicked(){
