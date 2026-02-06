@@ -19,6 +19,7 @@ body{
   color:#fff;
 }
 
+/* Falling hearts background */
 .heart{
   position:fixed;
   top:-10px;
@@ -32,18 +33,7 @@ body{
   to{transform:translateY(110vh);opacity:0;}
 }
 
-/* Shake animation */
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(6px); }
-  75% { transform: translateX(-6px); }
-  100% { transform: translateX(0); }
-}
-.shake {
-  animation: shake 0.25s;
-}
-
+/* Card */
 .card{
   background:rgba(255,255,255,.22);
   backdrop-filter:blur(10px);
@@ -54,6 +44,7 @@ body{
   z-index:3;
 }
 
+/* Text */
 h1{
   font-family:'Great Vibes',cursive;
   font-size:3rem;
@@ -65,13 +56,13 @@ p{
   margin-bottom:25px;
 }
 
+/* Buttons */
 .buttons{
   display:flex;
   gap:20px;
   justify-content:center;
 }
 
-/* Buttons */
 button{
   padding:14px 22px;
   border-radius:60px;
@@ -82,15 +73,76 @@ button{
   color:#ff4d6d;
 }
 
-/* NO is normal initially */
 #noBtn{
   position:relative;
 }
 
+/* Shake animation */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
+}
+.shake{
+  animation:shake .25s;
+}
+
+/* YES screen */
 .yes-screen{
   display:none;
   flex-direction:column;
   align-items:center;
+  gap:18px;
+  animation:popIn .8s ease forwards;
+}
+
+@keyframes popIn{
+  from{transform:scale(.6);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+
+.yes-screen h1{
+  font-size:3.4rem;
+  animation:heartbeat 1.6s infinite;
+}
+
+@keyframes heartbeat{
+  0%,100%{transform:scale(1);}
+  25%{transform:scale(1.08);}
+  50%{transform:scale(1);}
+  75%{transform:scale(1.06);}
+}
+
+.promise{
+  font-size:1.2rem;
+  line-height:1.6;
+  background:rgba(255,255,255,.25);
+  padding:18px 24px;
+  border-radius:18px;
+  backdrop-filter:blur(8px);
+}
+
+.signature{
+  margin-top:10px;
+  font-size:1rem;
+  opacity:.9;
+}
+
+/* Confetti */
+.confetti{
+  position:fixed;
+  font-size:22px;
+  animation:confettiFall linear forwards;
+  z-index:5;
+}
+
+@keyframes confettiFall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
 }
 
 audio{display:none;}
@@ -99,14 +151,15 @@ audio{display:none;}
 
 <body>
 
-<!-- Song (add song.mp3 in repo) -->
+<!-- Background music -->
 <audio id="loveSong">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
+<!-- Main Card -->
 <div class="card" id="mainCard">
   <h1>Shivani ❤️</h1>
-  <p>Will you be my Valentine (date pr chaloge mere sath😄)? 💖</p>
+  <p>Will you be my Valentine (date pr chaloge mere sath 😄)? 💖</p>
 
   <div class="buttons">
     <button onclick="yesClicked()">YES (Obviously) 💖</button>
@@ -114,77 +167,108 @@ audio{display:none;}
   </div>
 </div>
 
+<!-- YES Screen -->
 <div class="card yes-screen" id="yesScreen">
-  <h1> Yayyy!! 💕 I knew it ❤️</h1>
-  <p> You just made me the happiest person today 💖</p>
+  <h1>Shivani 💕</h1>
+
+  <div class="promise">
+    You didn’t just say <b>YES</b>…<br>
+    You made my whole day, week & heart 💖<br><br>
+    From laughs to late talks,<br>
+    from silly fights to endless memories —<br>
+    I choose <b>YOU</b> 🌸
+  </div>
+
+  <div class="signature">
+    — Yours, Arsh ❤️
+  </div>
 </div>
 
 <script>
 const noBtn = document.getElementById("noBtn");
 const card = document.getElementById("mainCard");
+const mainCard = document.getElementById("mainCard");
+const yesScreen = document.getElementById("yesScreen");
 
-let speed = 1;
 let attempts = 0;
+let isMoving = false;
 
 const teaseTexts = [
   "miss ho gya 😜",
   "phirse try krlo 😏",
   "nhi ho rha 😘",
   "nhi hoga ❤️",
-  "No, kbhi option hi nhi hoga 😈"
+  "No kbhi option hi nhi hoga 😈"
 ];
 
 noBtn.addEventListener("click", dodge);
-noBtn.addEventListener("touchstart", dodge);
+noBtn.addEventListener("touchstart", dodge, {passive:false});
 
 function dodge(e){
   e.preventDefault();
+  if(isMoving) return;
+  isMoving = true;
   attempts++;
 
-  /* First attempt: convert to fixed AFTER layout */
   if(attempts === 1){
     const rect = noBtn.getBoundingClientRect();
     noBtn.style.position = "fixed";
     noBtn.style.left = rect.left + "px";
     noBtn.style.top = rect.top + "px";
-
     noBtn.classList.add("shake");
-    setTimeout(()=>noBtn.classList.remove("shake"),250);
+    setTimeout(()=>{
+      noBtn.classList.remove("shake");
+      isMoving = false;
+    },250);
     return;
   }
 
-  speed += 0.35;
   noBtn.innerText = teaseTexts[attempts % teaseTexts.length];
 
-  const cardRect = card.getBoundingClientRect();
   const margin = 20;
-
   const maxX = window.innerWidth - noBtn.offsetWidth - margin;
   const maxY = window.innerHeight - noBtn.offsetHeight - margin;
 
   let x, y;
   do{
-    x = margin + Math.random() * maxX;
-    y = margin + Math.random() * maxY;
-  } while (
-    x > cardRect.left - noBtn.offsetWidth &&
-    x < cardRect.right &&
-    y > cardRect.top - noBtn.offsetHeight &&
-    y < cardRect.bottom
+    x = Math.random() * maxX;
+    y = Math.random() * maxY;
+  } while(
+    x > card.offsetLeft - noBtn.offsetWidth &&
+    x < card.offsetLeft + card.offsetWidth &&
+    y > card.offsetTop - noBtn.offsetHeight &&
+    y < card.offsetTop + card.offsetHeight
   );
 
-  noBtn.style.transition = `left ${0.12/speed}s, top ${0.12/speed}s`;
+  noBtn.style.transition = "left .15s, top .15s";
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
+
+  setTimeout(()=>isMoving=false,150);
 }
 
 function yesClicked(){
   mainCard.style.display = "none";
   yesScreen.style.display = "flex";
   document.getElementById("loveSong").play();
+  launchConfetti();
 }
 
-/* Falling hearts */
+/* Confetti burst */
+function launchConfetti(){
+  for(let i=0;i<40;i++){
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.innerHTML = ["💖","💕","💘","💝"][Math.floor(Math.random()*4)];
+    c.style.left = Math.random()*100 + "vw";
+    c.style.top = "-10px";
+    c.style.animationDuration = (3 + Math.random()*2) + "s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+
+/* Continuous falling hearts */
 function heart(){
   const h = document.createElement("div");
   h.className = "heart";
