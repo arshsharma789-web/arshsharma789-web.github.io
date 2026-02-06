@@ -10,22 +10,22 @@
 body{
   margin:0;
   height:100vh;
-  background:radial-gradient(circle at top,#ff9a9e,#fad0c4);
+  background:linear-gradient(135deg,#fbd3e9,#cbb4f3);
   display:flex;
   align-items:center;
   justify-content:center;
   font-family:'Segoe UI',sans-serif;
   overflow:hidden;
-  color:#fff;
+  color:#4a2c40;
 }
 
-/* Falling hearts background */
+/* Falling hearts */
 .heart{
   position:fixed;
   top:-10px;
   font-size:20px;
   animation:fall linear forwards;
-  opacity:.8;
+  opacity:.7;
   z-index:1;
 }
 
@@ -35,25 +35,27 @@ body{
 
 /* Card */
 .card{
-  background:rgba(255,255,255,.22);
-  backdrop-filter:blur(10px);
+  background:rgba(255,255,255,.9);
   padding:45px 35px;
-  border-radius:25px;
+  border-radius:28px;
   text-align:center;
   max-width:540px;
+  box-shadow:0 25px 60px rgba(0,0,0,.18);
   z-index:3;
 }
 
-/* Text */
+/* Headings */
 h1{
   font-family:'Great Vibes',cursive;
-  font-size:3rem;
-  margin-bottom:10px;
+  font-size:3.2rem;
+  margin-bottom:12px;
+  color:#b02a6f;
 }
 
 p{
   font-size:1.1rem;
-  margin-bottom:25px;
+  margin-bottom:30px;
+  color:#5a3a4f;
 }
 
 /* Buttons */
@@ -64,30 +66,35 @@ p{
 }
 
 button{
-  padding:14px 22px;
+  padding:14px 26px;
   border-radius:60px;
   border:none;
   cursor:pointer;
-  font-size:.95rem;
-  background:#fff;
-  color:#ff4d6d;
+  font-size:1rem;
+  background:#b02a6f;
+  color:#fff;
+  transition:.25s;
+}
+
+button:hover{
+  transform:scale(1.05);
 }
 
 #noBtn{
+  background:#e6a6c7;
+  color:#5a2c45;
   position:relative;
 }
 
-/* Shake animation */
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(6px); }
-  75% { transform: translateX(-6px); }
-  100% { transform: translateX(0); }
+/* Shake */
+@keyframes shake{
+  0%{transform:translateX(0);}
+  25%{transform:translateX(-6px);}
+  50%{transform:translateX(6px);}
+  75%{transform:translateX(-6px);}
+  100%{transform:translateX(0);}
 }
-.shake{
-  animation:shake .25s;
-}
+.shake{animation:shake .25s;}
 
 /* YES screen */
 .yes-screen{
@@ -105,6 +112,7 @@ button{
 
 .yes-screen h1{
   font-size:3.4rem;
+  color:#a61c63;
   animation:heartbeat 1.6s infinite;
 }
 
@@ -118,16 +126,16 @@ button{
 .promise{
   font-size:1.2rem;
   line-height:1.6;
-  background:rgba(255,255,255,.25);
-  padding:18px 24px;
-  border-radius:18px;
-  backdrop-filter:blur(8px);
+  background:#fde8f2;
+  padding:22px 26px;
+  border-radius:20px;
+  color:#5a2c45;
 }
 
 .signature{
   margin-top:10px;
   font-size:1rem;
-  opacity:.9;
+  color:#7a3f5f;
 }
 
 /* Confetti */
@@ -151,7 +159,6 @@ audio{display:none;}
 
 <body>
 
-<!-- Background music -->
 <audio id="loveSong">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
@@ -159,7 +166,7 @@ audio{display:none;}
 <!-- Main Card -->
 <div class="card" id="mainCard">
   <h1>Shivani ❤️</h1>
-  <p>Will you be my Valentine (date pr chaloge mere sath 😄)? 💖</p>
+  <p>Will you be my Valentine (date pr chaloge mere sath😄)? 💖</p>
 
   <div class="buttons">
     <button onclick="yesClicked()">YES (Obviously) 💖</button>
@@ -211,70 +218,66 @@ function dodge(e){
   attempts++;
 
   if(attempts === 1){
-    const rect = noBtn.getBoundingClientRect();
-    noBtn.style.position = "fixed";
-    noBtn.style.left = rect.left + "px";
-    noBtn.style.top = rect.top + "px";
+    const r = noBtn.getBoundingClientRect();
+    noBtn.style.position="fixed";
+    noBtn.style.left=r.left+"px";
+    noBtn.style.top=r.top+"px";
     noBtn.classList.add("shake");
     setTimeout(()=>{
       noBtn.classList.remove("shake");
-      isMoving = false;
+      isMoving=false;
     },250);
     return;
   }
 
   noBtn.innerText = teaseTexts[attempts % teaseTexts.length];
 
-  const margin = 20;
-  const maxX = window.innerWidth - noBtn.offsetWidth - margin;
-  const maxY = window.innerHeight - noBtn.offsetHeight - margin;
+  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
 
-  let x, y;
+  let x,y;
   do{
-    x = Math.random() * maxX;
-    y = Math.random() * maxY;
-  } while(
-    x > card.offsetLeft - noBtn.offsetWidth &&
-    x < card.offsetLeft + card.offsetWidth &&
-    y > card.offsetTop - noBtn.offsetHeight &&
-    y < card.offsetTop + card.offsetHeight
+    x = Math.random()*maxX;
+    y = Math.random()*maxY;
+  }while(
+    x>card.offsetLeft-noBtn.offsetWidth &&
+    x<card.offsetLeft+card.offsetWidth &&
+    y>card.offsetTop-noBtn.offsetHeight &&
+    y<card.offsetTop+card.offsetHeight
   );
 
-  noBtn.style.transition = "left .15s, top .15s";
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+  noBtn.style.transition="left .15s, top .15s";
+  noBtn.style.left=x+"px";
+  noBtn.style.top=y+"px";
 
   setTimeout(()=>isMoving=false,150);
 }
 
 function yesClicked(){
-  mainCard.style.display = "none";
-  yesScreen.style.display = "flex";
+  mainCard.style.display="none";
+  yesScreen.style.display="flex";
   document.getElementById("loveSong").play();
-  launchConfetti();
+  confetti();
 }
 
-/* Confetti burst */
-function launchConfetti(){
-  for(let i=0;i<40;i++){
-    const c = document.createElement("div");
-    c.className = "confetti";
-    c.innerHTML = ["💖","💕","💘","💝"][Math.floor(Math.random()*4)];
-    c.style.left = Math.random()*100 + "vw";
-    c.style.top = "-10px";
-    c.style.animationDuration = (3 + Math.random()*2) + "s";
+function confetti(){
+  for(let i=0;i<35;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.innerHTML=["💖","💕","💘","💝"][Math.floor(Math.random()*4)];
+    c.style.left=Math.random()*100+"vw";
+    c.style.animationDuration=(3+Math.random()*2)+"s";
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),5000);
   }
 }
 
-/* Continuous falling hearts */
 function heart(){
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.innerHTML = "💖";
-  h.style.left = Math.random()*100 + "vw";
-  h.style.animationDuration = (3 + Math.random()*3) + "s";
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="💖";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(3+Math.random()*3)+"s";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),6000);
 }
